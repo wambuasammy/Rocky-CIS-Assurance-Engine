@@ -933,17 +933,26 @@ else
 fi
 
 
-############################################################
-# Final Summary
-############################################################
+echo
+echo "=================================================="
+echo "FINAL AUDIT SUMMARY"
+echo "=================================================="
+
+# Ensure counters exist (in case earlier sections didn't initialize them)
+PASS=${PASS:-0}
+FAIL=${FAIL:-0}
+MANUAL=${MANUAL:-0}
 
 TOTAL=$((PASS + FAIL + MANUAL))
 
-echo
-echo "================================================="
-echo "FINAL SUMMARY"
-echo "================================================="
-echo "PASS: $PASS"
-echo "FAIL: $FAIL"
-echo "MANUAL: $MANUAL"
-echo "Total Executed: $TOTAL"
+if [ "$TOTAL" -gt 0 ]; then
+    COMPLIANCE=$(awk "BEGIN {printf \"%.2f\", ($PASS/$TOTAL)*100}")
+else
+    COMPLIANCE="0.00"
+fi
+
+echo "Total Checks      : $TOTAL"
+echo "Passed Checks     : $PASS"
+echo "Failed Checks     : $FAIL"
+echo "Manual Checks     : $MANUAL"
+echo "Compliance Score  : $COMPLIANCE %"
